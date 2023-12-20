@@ -296,5 +296,5 @@ class Dataset(torch.utils.data.Dataset):
 
     def __getitem__(self, i):
         X, y = self.dataset[i]
-        return X, y, i
+        return X, y
 

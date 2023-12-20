@@ -5,7 +5,7 @@ import json
 from PIL import Image
 
 class DogCatDataset(torch.utils.data.Dataset):
-    def __init__(self, train, transform, path='/data/share/ryy/code/datasets/Dog_And_Cat/train'):
+    def __init__(self, train, transform, path='your dataset'):
         self.train = train
         self.transform = transform
         self.path = path
