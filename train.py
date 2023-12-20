@@ -101,8 +101,6 @@ if __name__ == '__main__':
     poisoned_train, testloader_benign, testloader_poison, BATCH_SIZE, N_EPOCH, LR, model = attack_setting(args)
     model = model(use_gpu)
 
-    print('______________________________________________',len(poisoned_train))
-    ################ cifar_train 10000 test 2000    imagenet_train 20000 test 5000  minst 12665 and 2115
     if args['dataset'] == 'mnist':
         N = 2115
         n = 12665
@@ -136,7 +134,7 @@ if __name__ == '__main__':
         save_path = PREFIX + '/smoothed_%d.model' % epoch
 
         if epoch >= epoch_switch:
-            print('Switched to DRAB training, sigma train is {} and sigma test is {}'.format(sigma_train.mean().item(),
+            print('Switched to IDAB training, sigma train is {} and sigma test is {}'.format(sigma_train.mean().item(),
                                                                                              sigma_test.mean().item()))
             sigma_train = train_model(model, trainloader, lr=LR, sigma_0=sigma_train, epoch=epoch,
                                       iters_sig=args['iter_sig_tr'],
@@ -144,7 +142,7 @@ if __name__ == '__main__':
             torch.save(model.state_dict(), save_path)
             acc_benign, sigma_testb = eval_model(model, testloader_benign, sigma_testb, iters_sig=args['iter_sig_ts'])
             acc_poison, sigma_test = eval_model(model, testloader_poison, sigma_test, iters_sig=args['iter_sig_ts'])
-            print("Benign/Poison ACC %.4f/%.4fs" % (acc_benign, acc_poison))  # 打印出模型在良性和有毒数据上的准确率，并指出模型参数保存的位置和当前时间。
+            print("Benign/Poison ACC %.4f/%.4fs" % (acc_benign, acc_poison))  
         else:
             print('Training with RAB')
             sigma_train = train_model(model, trainloader, lr=LR, sigma_0=sigma_train, epoch=epoch, iters_sig=0,
@@ -152,7 +150,7 @@ if __name__ == '__main__':
             torch.save(model.state_dict(), save_path)
             acc_benign, sigma_testb = eval_model(model, testloader_benign, sigma_testb, 0)
             acc_poison, sigma_test = eval_model(model, testloader_poison, sigma_test, 0)
-            print("Benign/Poison ACC %.4f/%.4fs" % (acc_benign, acc_poison))  # 打印出模型在良性和有毒数据上的准确率，并指出模型参数保存的位置和当前时间。
+            print("Benign/Poison ACC %.4f/%.4fs" % (acc_benign, acc_poison))  
 
     print('Training has finished now we optimize for the sigmas. So far, sigma train is {} and sigma test is {}'.format(
         sigma_train.mean().item(), sigma_test.mean().item()))
